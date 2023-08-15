@@ -13,23 +13,7 @@ def main():
     print('[Main Menu]\n' , '1: return a specific bible passage \n', '2: Retrieve the verse of the day.\n', '3: Retrieve a random verse.\n', '4: Terminate program\n')
     usOption = int(input('Please enter a menu option: '))
     if usOption == 1:
-        userPassage = input("Please type a passage, passages, or just a book (Ex. John 3:16): ")
-        #Split it into list to check if the book is a proper book of the bible
-        bookCheck = userPassage.split()
-        if bookCheck[0] == 1 or bookCheck[0] == 2:
-            bookCheck = bookCheck[0]+' '+bookCheck[1]
-            if bookCheck not in bibleBooks:
-                #print(bookCheck)
-                wrongBookFunc()
-        elif bookCheck[0] not in bibleBooks:
-            wrongBookFunc()
-        print('Requesting passage ', userPassage, '...')
-        userPassage = userPassage.replace(' ', '+')
-        #Debugging what went wrong
-        #print('Requesting passage ', userPassage, '...')
-        response = requests.get(api_url+'?passage='+userPassage+'&formatting=plain')
-        print('\n'+response.text+ '\n')
-        main()
+        PassageFunc()
     if usOption == 2:
         response = requests.get(api_url+'?formatting=plain'+'&passage=votd')
         print('\n'+response.text+ '\n')
@@ -44,9 +28,31 @@ def main():
         print('\n\nplease select a valid option')
         main()
 
-def wrongBookFunc():
-    print('please type a book first')
+def PassageFunc():
+    userPassage = input("Please type a passage, passages, or just a book (Ex. John 3:16) \n or you may type 'BACK' to go back to the main menu: ")
+    if userPassage.lower() == "back":
+        print("\n")
+        main()
+
+    bookCheck = userPassage.split()#Split it into list to check if the book is a proper book of the bible
+    if bookCheck[0] == 1 or bookCheck[0] == 2:
+        bookCheck = bookCheck[0]+' '+bookCheck[1]
+        if bookCheck not in bibleBooks:
+            #print(bookCheck)
+            WrongPassageFunc(userPassage)
+    elif bookCheck[0] not in bibleBooks:
+        WrongPassageFunc(userPassage)
+    print('Requesting passage ', userPassage, '...')
+    userPassage = userPassage.replace(' ', '+')
+    #Debugging what went wrong
+    #print('Requesting passage ', userPassage, '...')
+    response = requests.get(api_url+'?passage='+userPassage+'&formatting=plain')
+    print('\n'+response.text+ '\n')
     main()
+
+def WrongPassageFunc(str):
+    print(str + " is not a valid bible book. Please enter a valid bible book \n")
+    PassageFunc()
 
 if __name__ == "__main__":
     print('Hello, welcome to bible retriever! \n\n')
