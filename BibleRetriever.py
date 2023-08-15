@@ -11,7 +11,14 @@ bibleBooks =[    'Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua'
 menuOptions = [1,2,3,4]
 def main():
     print('[Main Menu]\n' , '1: return a specific bible passage \n', '2: Retrieve the verse of the day.\n', '3: Retrieve a random verse.\n', '4: Terminate program\n')
-    usOption = int(input('Please enter a menu option: '))
+    usOption = input('Please enter a menu option: ')
+
+    try:
+        usOption= int(usOption)
+    except:
+        print("Please enter a valid non string menu option \n")
+        main()
+
     if usOption == 1:
         PassageFunc()
     if usOption == 2:
